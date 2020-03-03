@@ -3,7 +3,7 @@ import asyncio
 import random
 
 BOT_PREFIX = "Arise! "
-TOKEN = "MzUxMDc1NTMxODk2MjU4NTYy.XluEfA.86oDql-V6ULyhrRVYB2PVJCeOJo"
+# TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
 
