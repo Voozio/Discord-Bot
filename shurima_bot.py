@@ -4,7 +4,7 @@ import random
 import poll_manager
 
 BOT_PREFIX = "Arise! "
-TOKEN = 'MzUxMDc1NTMxODk2MjU4NTYy.Xl2n3Q.VXbfAkvAtlFMYXMi5o38hC0gb7I'
+TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
 quote_list = [line for line in open("quotes.txt")]
