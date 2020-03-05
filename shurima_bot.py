@@ -3,7 +3,7 @@ import asyncio
 import random
 import poll_manager
 
-BOT_PREFIX = "Arise! "
+BOT_PREFIX = ("Arise! ", "arise!")
 TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
