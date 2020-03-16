@@ -2,12 +2,14 @@ from discord.ext import commands
 import asyncio
 import random
 import poll_manager
+import ultimate_bravery
 
-BOT_PREFIX = ("Arise! ", "arise!")
-TOKEN = [token]
+BOT_PREFIX = ("Arise! ", "arise! ")
+TOKEN = 'MzUxMDc1NTMxODk2MjU4NTYy.XmBIzg.KDjNc5f8IaoVS4nXCmmf9YUEDmw'
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
-quote_list = [line for line in open("quotes.txt")]
+quote_list = [line for line in open("txt_files/quotes.txt")]
+champion_list = [line for line in open("txt_files/champions.txt")]
 poll_list = []
 
 # Emojis
@@ -45,6 +47,7 @@ async def on_message(ctx):
     await client.process_commands(ctx)
 
 
+# no decimals
 # Commands
 @client.command()
 async def roll(ctx, num = 10):
@@ -52,7 +55,7 @@ async def roll(ctx, num = 10):
     if int(num) >= 1:
         await ctx.send(f"{ctx.author.mention} rolled a {random.randint(1, int(num))}")
     else:
-        await ctx.send("Stop wasting my time and roll a number greater than 0...")
+        await ctx.send("Azir has no time for insolence. Roll a number greater than 0...")
 
 
 @client.command()
@@ -80,7 +83,7 @@ async def lottery(ctx, wait_time = 60):
 @client.command()
 async def poll(ctx):
     print(f"{ctx.message.author} invoked the poll command")
-    user_poll = poll_manager.Poll(ctx)
+    user_poll = poll_manager.Poll(ctx, poll_list)
 
     await user_poll.prompt_poll_type()
 
@@ -95,59 +98,77 @@ async def poll(ctx):
 
     user_poll.get_poll_type(poll_type_reaction)
 
-    await user_poll.prompt_question()
+    prompt_question_m = await user_poll.prompt_question()
 
     def check2(m):
-        return m.author == ctx.message.author
+        return m.author == ctx.message.author and not m.content.startswith("arise!", 0) \
+               and m.channel == prompt_question_m.channel
 
     try:
-        question = await client.wait_for("message", check = check2, timeout=60)
+        question = await client.wait_for("message", check = check2, timeout = 60)
     except asyncio.TimeoutError:
         await ctx.send(f"{ctx.author.mention} You mustn't make me wait. Come back when you're ready.")
         return
     else:
+        user_poll.question = question.content
         if poll_type_reaction.emoji == CAMEL:
-            user_poll.question = question.content
-            await ctx.send(f"{ctx.author.mention} Simple, I like it. Well, you're all set. "
-                           f"Use the \"polling\" command to interrogate friends and strangers alike.")
+            await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n"
+                           f"For you, this is poll #{user_poll.poll_number}.")
+            poll_list.append(user_poll)
+            return
         else:
-            await user_poll.prompt_options()
+            prompt_options_m = await user_poll.prompt_options()
 
-    # def check3(user_reaction, user):
-    #     return user == ctx.message.author and user_reaction.emoji is not None
+    def check3(user_reaction, user):
+        return user == ctx.message.author and user_reaction.message.id == prompt_options_m.id
 
-    # if poll_type_reaction.emoji == CAMEL:
-    #     try:
-    #         reaction_1, _ = await client.wait_for("reaction_add", check = check3, timeout = 60)
-    #     except asyncio.TimeoutError:
-    #         await ctx.send(f"{ctx.author.mention} You mustn't make me wait. Come back when you're ready.")
-    #         return
-    #     else:
-    #         if reaction_1.emoji == ORANGE_DIAMOND:
-    #             user_poll.add_option(THUMBS_UP)
-    #             user_poll.add_option(THUMBS_DOWN)
-    #         else:
-    #             user_poll.add_option(reaction_1)
-    #             try:
-    #                 reaction_2, _ = await client.wait_for("reaction_add", check = check3, timeout = 60)
-    #             except asyncio.TimeoutError:
-    #                 await ctx.send(f"{ctx.author.mention} You mustn't make me wait. Come back when you're ready.")
-    #                 return
-    #             else:
-    #                 if reaction_2.emoji == ORANGE_DIAMOND:
-    #                     user_poll.add_option(THUMBS_UP)
-    #                     user_poll.add_option(THUMBS_DOWN)
-    #                 else:
-    #                     user_poll.add_option(reaction_2)
+    while True:
+        option = []
+        try:
+            reaction, _ = await client.wait_for("reaction_add", check = check3, timeout = 60)
+        except asyncio.TimeoutError:
+            await ctx.send(f"{ctx.author.mention} You mustn't make me wait. Come back when you're ready.")
+            return
+        else:
+            if reaction.emoji == ORANGE_DIAMOND:
+                await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n"
+                               f"For you, this is poll #{user_poll.poll_number}.")
+                poll_list.append(user_poll)
+                return
+            elif user_poll.contains(reaction):
+                await ctx.send("This emoji is already an option. Did you forget?")
+                prompt_options_m = await user_poll.prompt_option_reaction()
+                continue
+            else:
+                option.append(reaction)
 
-    poll_list.append(user_poll)
+        await user_poll.prompt_option_message(reaction)
+
+        try:
+            option_m = await client.wait_for("message", check = check2, timeout = 60)
+        except asyncio.TimeoutError:
+            await ctx.send(f"{ctx.author.mention} You mustn't make me wait. Come back when you're ready.")
+            return
+        else:
+            option.append(option_m)
+
+        user_poll.add_option(option)
+        prompt_options_m = await user_poll.prompt_option_reaction()
 
 
 @client.command()
-async def polling(ctx):
+async def polling(ctx, poll_number = 1):
+    print(f"{ctx.message.author} invoked the polling command")
+    temp = 1
     for p in poll_list:
         if ctx.message.author == p.owner:
-            await p.ask()
+            if poll_number == temp:
+                await p.ask(ctx)
+                del poll_list[temp - 1]
+                return
+            else:
+                temp += 1
+    await ctx.send("You don't have that many polls. Can you even count?")
 
 
 @client.command()
@@ -155,5 +176,11 @@ async def prophecy(ctx):
     print(f"{ctx.message.author} invoked the prophecy command")
     await ctx.send(random.choice(quote_list))
 
+
+@client.command()
+async def ub(ctx):
+    print(f"{ctx.message.author} invoked the Ultimate Bravery command")
+    player = ultimate_bravery.UB()
+    print(player.item_list)
 
 client.run(TOKEN)
