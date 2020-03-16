@@ -5,7 +5,7 @@ import poll_manager
 import ultimate_bravery
 
 BOT_PREFIX = ("Arise! ", "arise! ")
-TOKEN = 'MzUxMDc1NTMxODk2MjU4NTYy.XmBIzg.KDjNc5f8IaoVS4nXCmmf9YUEDmw'
+TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
 quote_list = [line for line in open("txt_files/quotes.txt")]
