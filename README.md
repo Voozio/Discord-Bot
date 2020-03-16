@@ -6,11 +6,11 @@ Description: A bot created using a Python Discord API. This project was created 
 - discord.py
 
 # Current Features
-- Poll manager (Yes/No Questions)
+- Polling (Binary/Multiple Choice Questions)
 - Random prophecy (Quotes related to Azir from the game League of Legends)
 - Random number generator
 
 # Features to be Implemented
-- Multiple choice poll option
+- Ultimate Bravery
 - YouTube music player
 - League of Legends Clash team manager
