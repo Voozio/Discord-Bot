@@ -8,8 +8,8 @@ BOT_PREFIX = ("Arise! ", "arise! ")
 TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
-quote_list = [line for line in open("txt_files/quotes.txt")]
-champion_list = [line for line in open("txt_files/champions.txt")]
+quote_list = [line[:-1] for line in open("txt_files/quotes.txt")]
+champion_list = [line[:-1] for line in open("txt_files/champions.txt")]
 poll_list = []
 
 # Emojis
@@ -112,8 +112,7 @@ async def poll(ctx):
     else:
         user_poll.question = question.content
         if poll_type_reaction.emoji == CAMEL:
-            await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n"
-                           f"For you, this is poll #{user_poll.poll_number}.")
+            await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n")
             poll_list.append(user_poll)
             return
         else:
@@ -131,8 +130,7 @@ async def poll(ctx):
             return
         else:
             if reaction.emoji == ORANGE_DIAMOND:
-                await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n"
-                               f"For you, this is poll #{user_poll.poll_number}.")
+                await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n")
                 poll_list.append(user_poll)
                 return
             elif user_poll.contains(reaction):
@@ -164,7 +162,7 @@ async def polling(ctx, poll_number = 1):
         if ctx.message.author == p.owner:
             if poll_number == temp:
                 await p.ask(ctx)
-                del poll_list[temp - 1]
+                poll_list.remove(p)
                 return
             else:
                 temp += 1
@@ -178,9 +176,9 @@ async def prophecy(ctx):
 
 
 @client.command()
-async def ub(ctx):
+async def ub(ctx, selection = 1):
     print(f"{ctx.message.author} invoked the Ultimate Bravery command")
-    player = ultimate_bravery.UB()
-    print(player.item_list)
+    player = ultimate_bravery.UB(selection)
+    await ctx.send(player.display(ctx))
 
 client.run(TOKEN)

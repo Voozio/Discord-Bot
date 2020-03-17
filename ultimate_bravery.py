@@ -1,11 +1,11 @@
 import random
 
-champion_list = [line for line in open("txt_files/champions.txt")]
-items = [line for line in open("txt_files/items/items.txt")]
-items_starter = [line for line in open("txt_files/items/items_starter.txt")]
-items_shoes = [line for line in open("txt_files/items/items_shoes.txt")]
-items_jungle = [line for line in open("txt_files/items/items_jungle.txt")]
-items_support = [line for line in open("txt_files/items/items_support.txt")]
+champion_list = [line[:-1] for line in open("txt_files/champions.txt")]
+items = [line[:-1] for line in open("txt_files/items/items.txt")]
+items_starter = [line[:-1] for line in open("txt_files/items/items_starter.txt")]
+items_shoes = [line[:-1] for line in open("txt_files/items/items_shoes.txt")]
+items_jungle = [line[:-1] for line in open("txt_files/items/items_jungle.txt")]
+items_support = [line[:-1] for line in open("txt_files/items/items_support.txt")]
 
 
 class UB:
@@ -91,3 +91,16 @@ class UB:
             return "Frostfang"
         elif self.starter == "Steel Shouldergaurds":
             return "Runesteel Spaulders"
+
+    def display(self, ctx):
+        result = f"{ctx.author.mention}\n" \
+                 f"__**Champion**__\n" \
+                 f"{self.champion}\n\n" \
+                 f"__**Starting Item**__\n" \
+                 f"{self.starter}\n\n" \
+                 f"__**Items**__\n"
+
+        for item in self.item_list:
+            result += f"{item}\n"
+
+        return result
