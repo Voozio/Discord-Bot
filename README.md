@@ -8,9 +8,11 @@ Description: A bot created using a Python Discord API. This project was created 
 # Current Features
 - Ultimate Bravery
 - Polling (Binary/Multiple Choice Questions)
-- Random prophecy (Quotes related to Azir from the game League of Legends)
 - Random number generator
+- Random prophecy (Quotes related to Azir from the game League of Legends)
+- Help
 
 # Features to be Implemented
+- Team generator
 - YouTube music player
 - League of Legends Clash team manager
