@@ -14,8 +14,8 @@ class Poll:
         self.ctx = context
         self.owner = context.message.author
         self.initial_prompt = f"{self.ctx.author.mention} You seek opinions. React to the option you desire.\n"\
-                              f"{CAMEL} - Yes/No Question\n"\
-                              f"{DESERT}  - Multiple Choice (Coming Soon)"
+                              f"{CAMEL} - Yes/No Question (Why though?)\n"\
+                              f"{DESERT}  - Multiple Choice"
         self.poll_type = None
         self.poll_number = self.get_poll_num(poll_list)
         self.question_prompt = ""

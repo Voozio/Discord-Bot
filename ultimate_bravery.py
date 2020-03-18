@@ -1,6 +1,6 @@
 import random
 
-champion_list = [line[:-1] for line in open("txt_files/champions.txt")]
+champion_list = [line[:-1] for line in open("txt_files/champions/champions.txt")]
 items = [line[:-1] for line in open("txt_files/items/items.txt")]
 items_starter = [line[:-1] for line in open("txt_files/items/items_starter.txt")]
 items_shoes = [line[:-1] for line in open("txt_files/items/items_shoes.txt")]
@@ -42,7 +42,7 @@ class UB:
         Starting Items
         """
         if self.jungler:
-            self.starter = "Your Choice"
+            self.starter = "Hunter's Machete or Hunter's Talisman"
         elif self.support:
             self.starter = random.choice(items_support)
         elif self.viktor:
@@ -62,25 +62,39 @@ class UB:
         if self.jungler:
             self.item_list.append(self.boots)
             self.item_list.append(random.choice(items_jungle))
-            for i in range(4):
-                self.item_list.append(random.choice(items))
+
+            while len(self.item_list) < 6:
+                item = random.choice(items)
+                if item not in self.item_list:
+                    self.item_list.append(item)
         elif self.support:
             self.item_list.append(self.boots)
             self.item_list.append(self.get_supp_item())
-            for i in range(4):
-                self.item_list.append(random.choice(items))
+
+            while len(self.item_list) < 6:
+                item = random.choice(items)
+                if item not in self.item_list:
+                    self.item_list.append(item)
         elif self.snake:
-            for i in range(6):
-                self.item_list.append(random.choice(items))
+            while len(self.item_list) < 6:
+                item = random.choice(items)
+                if item not in self.item_list:
+                    self.item_list.append(item)
         elif self.viktor:
             self.item_list.append(self.boots)
             self.item_list.append("Hex Core Item")
-            for i in range(4):
-                self.item_list.append(random.choice(items))
+
+            while len(self.item_list) < 6:
+                item = random.choice(items)
+                if item not in self.item_list:
+                    self.item_list.append(item)
         else:
             self.item_list.append(self.boots)
-            for i in range(5):
-                self.item_list.append(random.choice(items))
+
+            while len(self.item_list) < 6:
+                item = random.choice(items)
+                if item not in self.item_list:
+                    self.item_list.append(item)
 
     def get_supp_item(self):
         if self.starter == "Relic Shield":

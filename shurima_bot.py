@@ -1,6 +1,7 @@
 from discord.ext import commands
 import asyncio
 import random
+import helper
 import poll_manager
 import ultimate_bravery
 
@@ -8,8 +9,10 @@ BOT_PREFIX = ("Arise! ", "arise! ")
 TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
+client.remove_command("help")
+helper = helper.Helper()
 quote_list = [line[:-1] for line in open("txt_files/quotes.txt")]
-champion_list = [line[:-1] for line in open("txt_files/champions.txt")]
+champion_list = [line[:-1] for line in open("txt_files/champions/champions.txt")]
 poll_list = []
 
 # Emojis
@@ -34,8 +37,6 @@ async def on_ready():
 async def on_message(ctx):
     if ctx.author.id == client.user.id:
         return
-    elif ctx.content.startswith('!hello'):
-        await ctx.channel.send(f"Hello {ctx.author.mention}")
     # elif "azir" in ctx.content.lower():
     #     responses = [
     #         "Did somebody say his name?",
@@ -51,7 +52,7 @@ async def on_message(ctx):
 # Commands
 @client.command()
 async def roll(ctx, num = 10):
-    print(f"{ctx.message.author} invoked the roll command")
+    print(f"{ctx.message.author} invoked the Roll command")
     if int(num) >= 1:
         await ctx.send(f"{ctx.author.mention} rolled a {random.randint(1, int(num))}")
     else:
@@ -61,11 +62,11 @@ async def roll(ctx, num = 10):
 @client.command()
 @commands.cooldown(1, 15)
 async def lottery(ctx, wait_time = 60):
-    print(f"{ctx.message.author} invoked the lottery command")
+    print(f"{ctx.message.author} invoked the Lottery command")
     if 0 > wait_time > 60:
         wait_time = 60
 
-    users = [ctx.message.author]
+    users = []
     message = await ctx.send(f"{ctx.author.mention} started a lottery. React to this message to enter. "
                              f"Soon, a lucky soldier will be selected to fight in Azir's war. @here")
 
@@ -82,7 +83,7 @@ async def lottery(ctx, wait_time = 60):
 
 @client.command()
 async def poll(ctx):
-    print(f"{ctx.message.author} invoked the poll command")
+    print(f"{ctx.message.author} invoked the Poll command")
     user_poll = poll_manager.Poll(ctx, poll_list)
 
     await user_poll.prompt_poll_type()
@@ -112,7 +113,7 @@ async def poll(ctx):
     else:
         user_poll.question = question.content
         if poll_type_reaction.emoji == CAMEL:
-            await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n")
+            await ctx.send("Well, you're all set. Use the \"polling\" command to ask away.\n")
             poll_list.append(user_poll)
             return
         else:
@@ -130,7 +131,7 @@ async def poll(ctx):
             return
         else:
             if reaction.emoji == ORANGE_DIAMOND:
-                await ctx.send("Well, you're all set. Use the \"polling\" command to interrogate those below you.\n")
+                await ctx.send("Well, you're all set. Use the \"polling\" command to ask away.\n")
                 poll_list.append(user_poll)
                 return
             elif user_poll.contains(reaction):
@@ -156,7 +157,7 @@ async def poll(ctx):
 
 @client.command()
 async def polling(ctx, poll_number = 1):
-    print(f"{ctx.message.author} invoked the polling command")
+    print(f"{ctx.message.author} invoked the Polling command")
     temp = 1
     for p in poll_list:
         if ctx.message.author == p.owner:
@@ -171,7 +172,7 @@ async def polling(ctx, poll_number = 1):
 
 @client.command()
 async def prophecy(ctx):
-    print(f"{ctx.message.author} invoked the prophecy command")
+    print(f"{ctx.message.author} invoked the Prophecy command")
     await ctx.send(random.choice(quote_list))
 
 
@@ -180,5 +181,20 @@ async def ub(ctx, selection = 1):
     print(f"{ctx.message.author} invoked the Ultimate Bravery command")
     player = ultimate_bravery.UB(selection)
     await ctx.send(player.display(ctx))
+
+
+@client.command()
+async def team(ctx, selection = 1):
+    return
+
+
+@client.command()
+async def help(ctx, command = None):
+    print(f"{ctx.message.author} invoked the Help command")
+    if command is None:
+        await ctx.send(helper.display_help())
+    else:
+        await ctx.send(helper.display_command(command))
+
 
 client.run(TOKEN)
