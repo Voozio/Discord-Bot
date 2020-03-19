@@ -6,6 +6,7 @@ class Helper:
                          "polling",
                          "prophecy",
                          "roll",
+                         "team",
                          "ub"]
         self.commands_full = ["help [command]",
                               "lottery [seconds]",
@@ -13,6 +14,7 @@ class Helper:
                               "polling [poll number]",
                               "prophecy",
                               "roll [number]",
+                              "team [type],"
                               "ub [role]"]
         self.command_dict = {}
         self.init_command_info()
@@ -65,6 +67,13 @@ class Helper:
                                     "Azir needs random numbers *all* the time so he thought you may need some too. " \
                                     "This command produces a random number from 1 to the default value of **10**. " \
                                     "If you want to roll up to a different number, let me know."
+        self.command_dict["team"] = "**Syntax:** Arise! team [type]\n\n" \
+                                    "__**Description**__\n" \
+                                    "Do you want to play a team with a theme? The Shuriman Empire has just the " \
+                                    "solution for you! With 25 different groupings (wow. Wow! WOW!!), you'll be " \
+                                    "having fun forever :) The default value for [type] is **0** in which you'd " \
+                                    "get any random team. To select a team based on location, use **1**. To select " \
+                                    "a *funner* team, use **2**."
         self.command_dict["ub"] = "**Syntax:** Arise! ub [role]\n\n" \
                                   "__**Description**__\n" \
                                   "Oh, how I love Ultimate Bravery. No one is as good at this game mode as Azir. " \
@@ -79,4 +88,3 @@ class Helper:
                                   "6. Try your best to win. That's the whole point of this game.\n\n" \
                                   "The default value for [role] is **1**. To select a jungle specific build, " \
                                   "use **2**. To select a support specific build, use **3**."
-
