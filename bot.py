@@ -70,7 +70,7 @@ async def lottery(ctx, wait_time = 60):
 
     users = []
     message = await ctx.send(f"{ctx.author.mention} started a lottery. React to this message to enter. "
-                             f"Soon, a lucky soldier will be selected to fight in Azir's war. @here")
+                             f"Soon, a lucky soldier will be selected to fight in Azir's war.")
 
     await asyncio.sleep(wait_time)
     cache_message = await ctx.fetch_message(message.id)
@@ -86,6 +86,11 @@ async def lottery(ctx, wait_time = 60):
 @client.command()
 async def poll(ctx):
     print(f"{ctx.message.author} invoked the Poll command")
+
+    if ctx.message.channel.id != "693662780988850206":
+        await ctx.send("This command can only be used in the polling creation text channel. Out of all people, "
+                       "I thought you would've known...")
+        return
     user_poll = poll_manager.Poll(ctx, poll_list)
 
     await user_poll.prompt_poll_type()

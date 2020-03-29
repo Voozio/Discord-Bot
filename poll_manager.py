@@ -81,11 +81,11 @@ class Poll:
 
     async def ask(self, current_ctx):
         if self.poll_type == CAMEL:
-            message = await current_ctx.send(f"{self.ctx.author.mention} asks: {self.question} @here")
+            message = await current_ctx.send(f"{self.ctx.author.mention} asks: {self.question}")
             for emoji in self.options:
                 await message.add_reaction(emoji)
         elif self.poll_type == DESERT:
-            m_string = f"{self.ctx.author.mention} asks: {self.question} @here"
+            m_string = f"{self.ctx.author.mention} asks: {self.question}"
             for element in self.options:
                 m_string += f"\n{element[0].emoji} : {element[1].content}"
             m_string += "\nPlease select one."

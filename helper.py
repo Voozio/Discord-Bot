@@ -14,7 +14,7 @@ class Helper:
                               "polling [poll number]",
                               "prophecy",
                               "roll [number]",
-                              "team [type],"
+                              "team [type]",
                               "ub [role]"]
         self.command_dict = {}
         self.init_command_info()
