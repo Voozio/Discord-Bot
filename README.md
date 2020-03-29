@@ -16,3 +16,7 @@ Description: A bot created using a Python Discord API. This project was created 
 # Features to be Implemented
 - YouTube music player
 - League of Legends Clash team manager
+
+# Screenshot
+<b>Help Command</b><br>
+![Image of help command](https://github.com/Voozio/Images/blob/master/Discord%20Bot/help.png?raw=true)
