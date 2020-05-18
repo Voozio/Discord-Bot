@@ -7,7 +7,7 @@ import ultimate_bravery
 import team_generator
 
 BOT_PREFIX = ("Arise! ", "arise! ")
-TOKEN = 'MzUxMDc1NTMxODk2MjU4NTYy.XnLVaQ.qtbct7FfnCrzpa5IYcYQ1U-e6Qk'
+TOKEN = [token]
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
 client.remove_command("help")
