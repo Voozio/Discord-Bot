@@ -7,13 +7,14 @@ import ultimate_bravery
 import team_generator
 
 BOT_PREFIX = ("Arise! ", "arise! ")
-TOKEN = [token]
+TOKEN = 'MzUxMDc1NTMxODk2MjU4NTYy.XnLVaQ.qtbct7FfnCrzpa5IYcYQ1U-e6Qk'
 
 client = commands.Bot(command_prefix = BOT_PREFIX)
 client.remove_command("help")
 helper = helper.Helper()
 team_gen = team_generator.Team()
 quote_list = [line[:-1] for line in open("txt_files/quotes.txt")]
+recent_quotes = [line[:-1] for line in open("txt_files/quotes_recent.txt")]
 champion_list = [line[:-1] for line in open("txt_files/champions/champions.txt")]
 poll_list = []
 
@@ -29,6 +30,7 @@ THUMBS_DOWN = "👎"
 # Events
 @client.event
 async def on_ready():
+    print("------------")
     print("Logged in as")
     print(client.user.name)
     print(client.user.id)
@@ -87,7 +89,7 @@ async def lottery(ctx, wait_time = 60):
 async def poll(ctx):
     print(f"{ctx.message.author} invoked the Poll command")
 
-    if ctx.message.channel.id != "693662780988850206":
+    if ctx.message.channel.id != 693662780988850206:
         await ctx.send("This command can only be used in the polling creation text channel. Out of all people, "
                        "I thought you would've known...")
         return
@@ -180,7 +182,21 @@ async def polling(ctx, poll_number = 1):
 @client.command()
 async def prophecy(ctx):
     print(f"{ctx.message.author} invoked the Prophecy command")
-    await ctx.send(random.choice(quote_list))
+
+    repeated = True
+    while repeated:
+        quote = random.choice(quote_list)
+        try:
+            recent_quotes.index(quote)
+        except ValueError:
+            await ctx.send(quote)
+            for i in range(len(recent_quotes) - 1):
+                recent_quotes[i] = recent_quotes[i+1]
+            recent_quotes[len(recent_quotes) - 1] = quote
+            with open("txt_files/quotes_recent.txt", "w") as f:
+                for line in recent_quotes:
+                    f.write(f"{line}\n")
+            repeated = False
 
 
 @client.command()
